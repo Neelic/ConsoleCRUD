@@ -6,51 +6,73 @@ import org.ConsoleCRUD.repository.entity.User;
 public class UserService {
 
     private final UserRepository userRepository;
+    private User currentUser = null;
 
     public UserService(UserRepository userRepository) {
         this.userRepository = userRepository;
     }
 
-    public User loginUser(String email, String password) {
-        User user = null;
+    public boolean loginUser(String email, String password) {
         try {
-            user = userRepository.getUser(email);
+            User user = userRepository.getUser(email);
             if (!user.getPassword().equals(password)) {
                 throw new IllegalArgumentException("Incorrect password");
             }
+
+            currentUser = user;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            return false;
         }
 
-        return user;
+        return true;
     }
 
-    public User registerUser(String email, String password) {
-        User user = null;
+    public boolean registerUser(String email, String password, String name) {
         try {
-            user = new User(email, password);
+            User user = new User(email, password, name);
             userRepository.addUser(user);
+
+            currentUser = user;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            return false;
         }
 
-        return user;
+        return true;
     }
 
-    public void updateUser(String email, String password) {
+    public boolean updateUser(String email, String password, String name) {
         try {
-            User user = new User(email, password);
+            User user = new User(email, password, name);
             userRepository.updateUser(user);
+
+            currentUser = user;
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            return false;
         }
+
+        return true;
     }
 
-    public void deleteUser(String email) {
+    public boolean deleteUser() {
         try {
-            userRepository.deleteUser(email);
+            if (currentUser == null) {
+                throw new IllegalArgumentException("User is not logged in");
+            }
+
+            userRepository.deleteUser(currentUser.getEmail());
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
+            return false;
         }
+
+        currentUser = null;
+        return true;
+    }
+
+    public User getCurrentUser() {
+        return currentUser;
     }
 }
