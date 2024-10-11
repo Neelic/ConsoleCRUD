@@ -10,10 +10,12 @@ public class UserController {
 
     private final UserService userService;
     private final ScreenContainer screenContainer;
+    private final HabitController habitController;
 
-    public UserController(UserService userService, ScreenContainer screenContainer) {
+    public UserController(UserService userService, ScreenContainer screenContainer, HabitController habitController) {
         this.userService = userService;
         this.screenContainer = screenContainer;
+        this.habitController = habitController;
     }
 
     public void startBeforeAuth() {

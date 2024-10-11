@@ -1,5 +1,6 @@
 package org.ConsoleCRUD;
 
+import org.ConsoleCRUD.controller.HabitController;
 import org.ConsoleCRUD.controller.UserController;
 import org.ConsoleCRUD.repository.UserRepository;
 import org.ConsoleCRUD.screen.ScreenContainer;
@@ -14,7 +15,8 @@ public class Main {
 
         UserController userController = new UserController(
                 userService,
-                new ScreenContainer(scanner)
+                new ScreenContainer(scanner),
+                new HabitController()
         );
 
         userController.startBeforeAuth();
