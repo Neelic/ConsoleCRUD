@@ -11,17 +11,13 @@ public class User {
             throw new IllegalArgumentException("Email, password and name cannot be null");
         }
 
-        if (email.isEmpty() || password.isEmpty()) {
-            throw new IllegalArgumentException("Email and password cannot be empty");
+        if (email.isEmpty() || password.isEmpty() || name.isEmpty()) {
+            throw new IllegalArgumentException("Email, имя и пароль не могут быть пустыми");
         }
 
         if (!email.matches("^[\\w-.]+@([\\w-]+\\.)+[\\w-]+$")) {
             throw new IllegalArgumentException("Неверный формат email, он должен содержать хотя бы один символ," +
                     " символ '@', хотя бы один символ до и псоле точки");
-        }
-
-        if (name.isEmpty()) {
-            throw new IllegalArgumentException("Имя не может быть пустым");
         }
 
         this.name = name;

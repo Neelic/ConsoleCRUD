@@ -29,15 +29,13 @@ public class UserController {
     }
 
     public void profileScreen() {
-        int choice = screenContainer.getScreen(ScreenContainer.INIT_SCREEN).show();
+        int choice = screenContainer.getScreen(ScreenContainer.PROFILE_USER_SCREEN).show();
 
         switch (choice) {
             case UserProfileScreen.EXIT_PROGRAM_CHOICE -> System.exit(0);
             case UserProfileScreen.EXIT_PROFILE_CHOICE -> startBeforeAuth();
             case UserProfileScreen.CREATE_HABIT_CHOICE -> createHabit();
-            case UserProfileScreen.SHOW_HABIT_CHOICE -> showHabit();
-            case UserProfileScreen.CHANGE_HABIT_CHOICE -> changeHabit();
-            case UserProfileScreen.DELETE_HABIT_CHOICE -> deleteHabit();
+            case UserProfileScreen.SHOW_HABIT_CHOICE -> showHabits();
             case UserProfileScreen.SHOW_STAT_CHOICE -> showStat();
             case UserProfileScreen.CHANGE_PROFILE_CHOICE -> updateUser();
             case UserProfileScreen.DELETE_PROFILE_CHOICE -> deleteUser();
@@ -47,19 +45,13 @@ public class UserController {
     public void showStat() {
     }
 
-    public void deleteHabit() {
-        profileScreen();
-    }
-
-    public void changeHabit() {
-        profileScreen();
-    }
-
-    public void showHabit() {
+    public void showHabits() {
+        habitController.showHabits(userService.getCurrentUser());
         profileScreen();
     }
 
     public void createHabit() {
+        habitController.createHabit(userService.getCurrentUser());
         profileScreen();
     }
 
@@ -72,6 +64,8 @@ public class UserController {
         if (userService.loginUser(email, password)) {
             screen.printWelcomeMessage();
             profileScreen();
+        } else {
+            startBeforeAuth();
         }
     }
 
@@ -85,6 +79,8 @@ public class UserController {
         if (userService.registerUser(email, password, name)) {
             screen.printWelcomeMessage();
             profileScreen();
+        } else {
+            startBeforeAuth();
         }
     }
 
@@ -97,8 +93,9 @@ public class UserController {
 
         if (userService.updateUser(email, password, name)) {
             screen.printEditMessage();
-            profileScreen();
         }
+
+        profileScreen();
     }
 
     public void deleteUser() {

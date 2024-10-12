@@ -1,5 +1,7 @@
 package org.ConsoleCRUD.screen;
 
+import org.ConsoleCRUD.repository.entity.Frequency;
+
 import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.function.Predicate;
@@ -23,5 +25,13 @@ public class ScreenUtils {
         } while (isNotCorrectChoice.test(choice));
 
         return choice;
+    }
+
+    public static String frequencyToString(Frequency frequency) {
+        return switch (frequency) {
+            case DAILY -> "ежедневно";
+            case WEEKLY -> "еженедельно";
+            case MONTHLY -> "ежемесячно";
+        };
     }
 }

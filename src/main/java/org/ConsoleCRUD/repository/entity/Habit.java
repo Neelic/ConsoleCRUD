@@ -16,7 +16,7 @@ public class Habit {
         }
 
         if (name.isEmpty() || description.isEmpty()) {
-            throw new IllegalArgumentException("Name and description cannot be empty");
+            throw new IllegalArgumentException("Имя и описание привычки не могут быть пустыми");
         }
 
         this.name = name;

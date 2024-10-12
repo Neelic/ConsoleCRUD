@@ -15,6 +15,10 @@ public class UserService {
     public boolean loginUser(String email, String password) {
         try {
             User user = userRepository.getUser(email);
+            if (user == null) {
+                throw new IllegalArgumentException("User not found");
+            }
+
             if (!user.getPassword().equals(password)) {
                 throw new IllegalArgumentException("Incorrect password");
             }
