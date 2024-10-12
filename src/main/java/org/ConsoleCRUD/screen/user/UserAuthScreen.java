@@ -11,6 +11,7 @@ public class UserAuthScreen implements Screen {
     private String email = null;
     private String password = null;
     private String name = null;
+    private boolean isAuth = false;
 
     public UserAuthScreen(Scanner scanner) {
         this.scanner = scanner;
@@ -22,8 +23,11 @@ public class UserAuthScreen implements Screen {
         email = scanner.next();
         System.out.println("password:");
         password = scanner.next();
-        System.out.println("name:");
-        name = scanner.next();
+
+        if (!isAuth) {
+            System.out.println("name:");
+            name = scanner.next();
+        }
 
         return NOT_CHOICE;
     }
@@ -38,6 +42,10 @@ public class UserAuthScreen implements Screen {
 
     public String getName() {
         return name;
+    }
+
+    public void setIsAuth(boolean isAuth) {
+        this.isAuth = isAuth;
     }
 
     public void printWelcomeMessage() {

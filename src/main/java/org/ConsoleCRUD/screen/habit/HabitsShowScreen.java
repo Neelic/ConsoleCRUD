@@ -27,10 +27,12 @@ public class HabitsShowScreen implements Screen {
 
         for (int i = 0; i < habits.size(); i++) {
             Habit habit = habits.get(i);
-            System.out.printf("%d - %s, %s, %s%n", i + 1,
-                    habit.getName(), habit.getDescription(), ScreenUtils.frequencyToString(habit.getFrequency()));
+            System.out.printf(
+                    "%d - %s, %s, %s, %b%n",
+                    i + 1, habit.getName(), habit.getDescription(), ScreenUtils.frequencyToString(habit.getFrequency()),
+                    habit.isCompleted()
+            );
         }
-
 
         return ScreenUtils.getUserChoice(scanner, this::isNotCorrectChoice);
     }

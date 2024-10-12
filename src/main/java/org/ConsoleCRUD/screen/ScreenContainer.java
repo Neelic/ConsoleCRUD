@@ -1,9 +1,6 @@
 package org.ConsoleCRUD.screen;
 
-import org.ConsoleCRUD.screen.habit.HabitCreateScreen;
-import org.ConsoleCRUD.screen.habit.HabitDeleteScreen;
-import org.ConsoleCRUD.screen.habit.HabitScreen;
-import org.ConsoleCRUD.screen.habit.HabitsShowScreen;
+import org.ConsoleCRUD.screen.habit.*;
 import org.ConsoleCRUD.screen.user.UserAuthScreen;
 import org.ConsoleCRUD.screen.user.UserDeleteScreen;
 import org.ConsoleCRUD.screen.user.UserInitScreen;
@@ -24,6 +21,7 @@ public class ScreenContainer {
     public final static String HABIT_DELETE_SCREEN = "h_delete";
     public final static String HABIT_SCREEN = "h";
     public final static String HABITS_SHOW_SCREEN = "h_show";
+    public final static String HABITS_STAT_SCREEN = "h_stat";
 
     private final HashMap<String, Screen> screens;
 
@@ -37,7 +35,8 @@ public class ScreenContainer {
                         HABIT_CREATE_SCREEN, new HabitCreateScreen(scanner),
                         HABIT_DELETE_SCREEN, new HabitDeleteScreen(),
                         HABIT_SCREEN, new HabitScreen(scanner),
-                        HABITS_SHOW_SCREEN, new HabitsShowScreen(scanner)
+                        HABITS_SHOW_SCREEN, new HabitsShowScreen(scanner),
+                        HABITS_STAT_SCREEN, new HabitsStatScreen()
                 ));
     }
 

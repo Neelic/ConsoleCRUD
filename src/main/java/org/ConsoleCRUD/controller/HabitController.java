@@ -7,6 +7,7 @@ import org.ConsoleCRUD.screen.ScreenContainer;
 import org.ConsoleCRUD.screen.habit.HabitCreateScreen;
 import org.ConsoleCRUD.screen.habit.HabitScreen;
 import org.ConsoleCRUD.screen.habit.HabitsShowScreen;
+import org.ConsoleCRUD.screen.habit.HabitsStatScreen;
 import org.ConsoleCRUD.service.HabitService;
 
 public class HabitController {
@@ -40,6 +41,10 @@ public class HabitController {
             case HabitScreen.EXIT_CHOICE -> showHabits(user);
             case HabitScreen.CHANGE_HABIT_CHOICE -> changeHabit(user, habit);
             case HabitScreen.DELETE_HABIT_CHOICE -> deleteHabit(user, habit);
+            case HabitScreen.CHANGE_MARK_CHOICE -> {
+                habit.setCompleted(true);
+                showHabits(user);
+            }
         }
     }
 
@@ -73,5 +78,11 @@ public class HabitController {
         }
 
         showHabits(user);
+    }
+
+    public void showHabitsStat(User user) {
+        HabitsStatScreen screen = (HabitsStatScreen) screenContainer.getScreen(ScreenContainer.HABITS_STAT_SCREEN);
+        screen.setHabits(habitService.getHabits(user.getEmail()));
+        screen.show();
     }
 }

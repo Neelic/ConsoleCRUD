@@ -43,6 +43,8 @@ public class UserController {
     }
 
     public void showStat() {
+        habitController.showHabitsStat(userService.getCurrentUser());
+        profileScreen();
     }
 
     public void showHabits() {
@@ -57,9 +59,11 @@ public class UserController {
 
     public void authUser() {
         UserAuthScreen screen = (UserAuthScreen) screenContainer.getScreen(ScreenContainer.AUTH_SCREEN);
+        screen.setIsAuth(true);
         screen.show();
         String email = screen.getEmail();
         String password = screen.getPassword();
+        screen.setIsAuth(false);
 
         if (userService.loginUser(email, password)) {
             screen.printWelcomeMessage();

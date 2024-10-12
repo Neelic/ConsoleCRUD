@@ -21,7 +21,7 @@ public class UserProfileScreen implements Screen {
                     %d, чтобы выйти из профиля
                     %d, чтобы создать привычку
                     %d, чтобы посмотреть привычки
-                    %d, чтобы посмотреть статистику за указанный период
+                    %d, чтобы посмотреть статистику
                     %d, чтобы изменить email, пароль и имя
                     %d, чтобы удалить текущий профиль
                     """, EXIT_PROGRAM_CHOICE, EXIT_PROFILE_CHOICE, CREATE_HABIT_CHOICE, SHOW_HABIT_CHOICE,

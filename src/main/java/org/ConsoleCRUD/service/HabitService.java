@@ -4,6 +4,9 @@ import org.ConsoleCRUD.repository.HabitRepository;
 import org.ConsoleCRUD.repository.entity.Frequency;
 import org.ConsoleCRUD.repository.entity.Habit;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.temporal.ChronoUnit;
 import java.util.List;
 
 public class HabitService {
@@ -12,6 +15,42 @@ public class HabitService {
 
     public HabitService(HabitRepository habitRepository) {
         this.habitRepository = habitRepository;
+    }
+
+    public static int showStatisticOfHabit(Habit habit) {
+        List<LocalDate> historyChecks = habit.getHistoryChecks();
+        long period = 0;
+        switch (habit.getFrequency()) {
+            case DAILY -> period = ChronoUnit.DAYS.between(habit.getCreated(), LocalDate.now());
+            case WEEKLY -> period = ChronoUnit.WEEKS.between(habit.getCreated(), LocalDate.now());
+            case MONTHLY -> period = ChronoUnit.MONTHS.between(habit.getCreated(), LocalDate.now());
+        }
+
+        return (int) (historyChecks.size() / (period + 1));
+    }
+
+    public static int showStreakOfHabit(Habit habit) {
+        List<LocalDate> historyChecks = habit.getHistoryChecks();
+        Period period = switch (habit.getFrequency()) {
+            case DAILY -> Period.ofDays(1);
+            case WEEKLY -> Period.ofWeeks(1);
+            case MONTHLY -> Period.ofMonths(1);
+        };
+
+        int streak = 0;
+        for (int i = 0; i < historyChecks.size() - 1; i++) {
+            if (historyChecks.get(i).plus(period).equals(historyChecks.get(i + 1))) {
+                streak++;
+            } else {
+                streak = 0;
+            }
+        }
+
+        if (streak == 0 && historyChecks.size() == 1) {
+            return 1;
+        }
+
+        return streak;
     }
 
     public boolean createHabit(String email, String name, String description, Frequency frequency) {
@@ -41,7 +80,8 @@ public class HabitService {
 
     public boolean changeHabit(String email, Habit oldHabit, String name, String description, Frequency frequency) {
         try {
-            Habit newHabit = new Habit(name, description, frequency);
+            Habit newHabit = new Habit(name, description, frequency, oldHabit.getCreated(), oldHabit.isCompleted(),
+                    oldHabit.getHistoryChecks());
             habitRepository.changeHabit(email, oldHabit, newHabit);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
