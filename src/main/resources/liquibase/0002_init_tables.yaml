@@ -1,0 +1,140 @@
+databaseChangeLog:
+  - changeSet:
+      id: 2
+      author: "Dan"
+      changes:
+        - createTable:
+            tableName: "users"
+            schemaName: protected
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: email
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+                    unique: true
+              - column:
+                  name: password
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: "habits"
+            schemaName: protected
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: description
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: created
+                  type: DATE
+                  defaultValueComputed: CURRENT_DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: completed
+                  type: BOOLEAN
+                  defaultValue: false
+              - column:
+                  name: user_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: frequency_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: "frequencies"
+            schemaName: protected
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: name
+                  type: VARCHAR(255)
+                  constraints:
+                    nullable: false
+        - createTable:
+            tableName: "habits_history"
+            schemaName: protected
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+                    unique: true
+              - column:
+                  name: date_checked
+                  type: DATE
+                  constraints:
+                    nullable: false
+              - column:
+                  name: habit_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+        - addForeignKeyConstraint:
+            constraintName: "fk_user_id"
+            baseTableSchemaName: protected
+            baseTableName: "habits"
+            baseColumnNames: "user_id"
+            referencedTableName: "users"
+            referencedTableSchemaName: protected
+            referencedColumnNames: "id"
+            onDelete: CASCADE
+        - addForeignKeyConstraint:
+            constraintName: "fk_frequency_id"
+            baseTableSchemaName: protected
+            baseTableName: "habits"
+            baseColumnNames: "frequency_id"
+            referencedTableName: "frequencies"
+            referencedTableSchemaName: protected
+            referencedColumnNames: "id"
+        - addForeignKeyConstraint:
+            constraintName: "fk_habit_id"
+            baseTableSchemaName: protected
+            baseTableName: "habits_history"
+            baseColumnNames: "habit_id"
+            referencedTableName: "habits"
+            referencedTableSchemaName: protected
+            referencedColumnNames: "id"
+            onDelete: CASCADE

@@ -1,0 +1,7 @@
+databaseChangeLog:
+  - include:
+      file: liquibase/0001_init_schema.yaml
+  - include:
+      file: liquibase/0002_init_tables.yaml
+  - include:
+      file: liquibase/0003_init_data.yaml

@@ -2,6 +2,7 @@ package org.ConsoleCRUD;
 
 import org.ConsoleCRUD.controller.HabitController;
 import org.ConsoleCRUD.controller.UserController;
+import org.ConsoleCRUD.db.Storage;
 import org.ConsoleCRUD.repository.HabitRepository;
 import org.ConsoleCRUD.repository.UserRepository;
 import org.ConsoleCRUD.screen.ScreenContainer;
@@ -26,6 +27,7 @@ public class Main {
                 )
         );
 
+        Storage.getInstance();
         userController.startBeforeAuth();
     }
 }
