@@ -2,6 +2,8 @@ package org.ConsoleCRUD.repository.entity;
 
 import org.junit.Test;
 
+import java.time.LocalDate;
+
 import static org.junit.Assert.*;
 
 public class HabitTest {
@@ -27,5 +29,20 @@ public class HabitTest {
         new Habit("", "", Frequency.DAILY);
 
         fail("Expected an IllegalArgumentException to be thrown.");
+    }
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testHabitInitializationWithNullParameters() {
+        new Habit(null, null, null);
+
+        fail("Expected an IllegalArgumentException to be thrown.");
+    }
+
+    @Test
+    public void testAddsTodayDateToHistoryChecks() {
+        Habit habit = new Habit("Exercise", "Daily exercise", Frequency.DAILY);
+        habit.setCompleted(true);
+        assertTrue(habit.isCompleted());
+        assertTrue(habit.getHistoryChecks().contains(LocalDate.now()));
     }
 }

@@ -1,15 +1,42 @@
 package org.ConsoleCRUD.repository;
 
+import org.ConsoleCRUD.db.Storage;
+import org.ConsoleCRUD.db.StorageConf;
 import org.ConsoleCRUD.repository.entity.User;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
 
+import static org.ConsoleCRUD.TestUtils.*;
+import static org.ConsoleCRUD.TestUtils.DB_PASSWORD;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 public class UserRepositoryTest {
 
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:14.8-alpine3.18")
+            .withReuse(true)
+            .withDatabaseName(DB_NAME)
+            .withExposedPorts(DB_PORT, DB_PORT)
+            .withUsername(DB_USERNAME)
+            .withPassword(DB_PASSWORD); //TODO do not work with all run tests
+
+    @BeforeClass
+    public static void beforeClass() {
+        postgreSQLContainer.start();
+        Storage.setConf(new StorageConf(
+                postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword())
+        );
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        postgreSQLContainer.stop();
+    }
+
     @Test
-    public void test_add_user_with_unique_email() {
+    public void testAddUserWithUniqueEmail() {
         UserRepository userRepository = new UserRepository();
         User user = new User("unique@example.com", "password123", "John Doe");
         userRepository.addUser(user);
@@ -17,7 +44,7 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_retrieve_existing_user_by_email() {
+    public void testRetrieveExistingUserByEmail() {
         UserRepository userRepository = new UserRepository();
         User user = new User("existing@example.com", "password123", "Jane Doe");
         userRepository.addUser(user);
@@ -26,26 +53,27 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_delete_existing_user_by_email() {
+    public void testDeleteExistingUserByEmail() {
         UserRepository userRepository = new UserRepository();
         User user = new User("delete@example.com", "password123", "John Smith");
         userRepository.addUser(user);
-        userRepository.deleteUser("delete@example.com");
+        userRepository.deleteUser(user);
         assertNull(userRepository.getUser("delete@example.com"));
     }
 
     @Test
-    public void test_update_existing_user_with_valid_data() {
+    public void testUpdateExistingUserWithValidData() {
         UserRepository userRepository = new UserRepository();
         User user = new User("update@example.com", "password123", "Alice Doe");
         userRepository.addUser(user);
-        User updatedUser = new User("update@example.com", "newpassword123", "Alice Doe");
+        User updatedUser = new User("update@example.com", "newpassword123", "Alice Doe", user.getId());
         userRepository.updateUser(updatedUser);
-        assertEquals(updatedUser, userRepository.getUser("update@example.com"));
+
+        assertEquals(updatedUser, userRepository.getUser(updatedUser.getEmail()));
     }
 
     @Test(expected = IllegalArgumentException.class)
-    public void test_add_user_with_existing_email_throws_exception() {
+    public void testAddUserWithExistingEmailThrowsException() {
         UserRepository userRepository = new UserRepository();
         User user1 = new User("duplicate@example.com", "password123", "Bob Doe");
         User user2 = new User("duplicate@example.com", "password456", "Charlie Doe");
@@ -54,15 +82,15 @@ public class UserRepositoryTest {
     }
 
     @Test
-    public void test_retrieve_nonexistent_user_returns_null() {
+    public void testRetrieveNonexistentUserReturnsNull() {
         UserRepository userRepository = new UserRepository();
         assertNull(userRepository.getUser("nonexistent@example.com"));
     }
 
     @Test
-    public void test_delete_nonexistent_user_does_not_throw_exception() {
+    public void testDeleteNonexistentUserDoesNotThrowException() {
         UserRepository userRepository = new UserRepository();
 
-        userRepository.deleteUser("nonexistent@example.com");
+        userRepository.deleteUser(new User("nonexistent@example.com", "password123", "John Doe"));
     }
 }

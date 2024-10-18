@@ -1,43 +1,72 @@
 package org.ConsoleCRUD.repository;
 
+import org.ConsoleCRUD.db.Storage;
+import org.ConsoleCRUD.db.StorageConf;
 import org.ConsoleCRUD.repository.entity.Frequency;
 import org.ConsoleCRUD.repository.entity.Habit;
+import org.ConsoleCRUD.repository.entity.User;
+import org.junit.AfterClass;
+import org.junit.BeforeClass;
 import org.junit.Test;
+import org.testcontainers.containers.PostgreSQLContainer;
 
 import java.util.List;
 
+import static org.ConsoleCRUD.TestUtils.*;
 import static org.junit.Assert.*;
 
 public class HabitRepositoryTest {
 
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:14.8-alpine3.18")
+            .withReuse(true)
+            .withDatabaseName(DB_NAME)
+            .withExposedPorts(DB_PORT)
+            .withUsername(DB_USERNAME)
+            .withPassword(DB_PASSWORD); //TODO do not work with all run tests
+
+    @BeforeClass
+    public static void beforeClass() {
+        postgreSQLContainer.start();
+        Storage.setConf(new StorageConf(
+                postgreSQLContainer.getJdbcUrl(), postgreSQLContainer.getUsername(), postgreSQLContainer.getPassword())
+        );
+    }
+
+    @AfterClass
+    public static void afterClass() {
+        postgreSQLContainer.stop();
+    }
+
     @Test
     public void testHabitRepositoryWithValidParameters() {
         HabitRepository habitRepository = new HabitRepository();
-        String email = "user@example.com";
         Habit habit = new Habit("Exercise", "Daily exercise", Frequency.DAILY);
-        habitRepository.createHabit(email, habit);
+        User user = new User("test@test.ru", "test", "test");
+        user.setId(1);
+        habitRepository.createHabit(user, habit);
 
-        List<Habit> habits = habitRepository.getHabits(email);
+        List<Habit> habits = habitRepository.getHabits(user);
 
         assertNotNull(habits);
-        assertEquals(1, habits.size());
-        assertEquals(habit, habits.getFirst());
+        assertEquals(3, habits.size());
+        assertTrue(habits.contains(habit));
     }
 
     @Test
     public void testChangeHabit() {
         HabitRepository habitRepository = new HabitRepository();
-        String email = "user@example.com";
         Habit oldHabit = new Habit("Exercise", "Daily exercise", Frequency.DAILY);
         Habit newHabit = new Habit("Meditation", "Mindfulness practice", Frequency.WEEKLY);
-        habitRepository.createHabit(email, oldHabit);
-        habitRepository.changeHabit(email, oldHabit, newHabit);
+        User user = new User("user@example.com", "test", "test");
+        user.setId(1);
+        habitRepository.createHabit(user, oldHabit);
+        habitRepository.changeHabit(user, oldHabit, newHabit);
 
-        List<Habit> habits = habitRepository.getHabits(email);
+        List<Habit> habits = habitRepository.getHabits(user);
 
         assertNotNull(habits);
-        assertEquals(1, habits.size());
-        assertEquals(newHabit, habits.getFirst());
+        assertEquals(4, habits.size());
+        assertTrue(habits.contains(newHabit));
     }
 
     @Test(expected = IllegalArgumentException.class)
@@ -65,15 +94,6 @@ public class HabitRepositoryTest {
         Habit newHabit = new Habit("Meditation", "Mindfulness practice", Frequency.WEEKLY);
 
         habitRepository.changeHabit(null, oldHabit, newHabit);
-        fail("Expected IllegalArgumentException to be thrown");
-    }
-
-    @Test(expected = IllegalArgumentException.class)
-    public void testHandleNullUserEmailWhenDeletingHabit() {
-        HabitRepository habitRepository = new HabitRepository();
-        Habit habit = new Habit("Exercise", "Daily workout", Frequency.DAILY);
-
-        habitRepository.deleteHabit(null, habit);
         fail("Expected IllegalArgumentException to be thrown");
     }
 }

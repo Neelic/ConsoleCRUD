@@ -14,19 +14,7 @@ public class Habit {
     private boolean completed = false;
     private LocalDate created = LocalDate.now();
     public Habit(String name, String description, Frequency frequency) {
-
-        if (name == null || description == null || frequency == null) {
-            throw new IllegalArgumentException("Name, description and frequency cannot be null");
-        }
-
-        if (name.isEmpty() || description.isEmpty()) {
-            throw new IllegalArgumentException("Имя и описание привычки не могут быть пустыми");
-        }
-
-        this.name = name;
-        this.description = description;
-        this.frequency = frequency;
-        this.id = 0;
+        this(name, description, frequency, LocalDate.now(), false, new ArrayList<>());
     }
 
     public Habit(String name, String description, Frequency frequency, LocalDate created, boolean completed, List<LocalDate> historyChecks) {
