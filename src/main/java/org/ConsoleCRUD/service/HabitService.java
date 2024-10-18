@@ -3,6 +3,7 @@ package org.ConsoleCRUD.service;
 import org.ConsoleCRUD.repository.HabitRepository;
 import org.ConsoleCRUD.repository.entity.Frequency;
 import org.ConsoleCRUD.repository.entity.Habit;
+import org.ConsoleCRUD.repository.entity.User;
 
 import java.time.LocalDate;
 import java.time.Period;
@@ -53,10 +54,10 @@ public class HabitService {
         return streak;
     }
 
-    public boolean createHabit(String email, String name, String description, Frequency frequency) {
+    public boolean createHabit(User user, String name, String description, Frequency frequency) {
         try {
             Habit habit = new Habit(name, description, frequency);
-            habitRepository.createHabit(email, habit);
+            habitRepository.createHabit(user, habit);
 
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
@@ -66,10 +67,10 @@ public class HabitService {
         return true;
     }
 
-    public List<Habit> getHabits(String email) {
+    public List<Habit> getHabits(User user) {
         List<Habit> habits;
         try {
-            habits = habitRepository.getHabits(email);
+            habits = habitRepository.getHabits(user);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return null;
@@ -78,11 +79,11 @@ public class HabitService {
         return habits;
     }
 
-    public boolean changeHabit(String email, Habit oldHabit, String name, String description, Frequency frequency) {
+    public boolean changeHabit(User user, Habit oldHabit, String name, String description, Frequency frequency) {
         try {
             Habit newHabit = new Habit(name, description, frequency, oldHabit.getCreated(), oldHabit.isCompleted(),
                     oldHabit.getHistoryChecks());
-            habitRepository.changeHabit(email, oldHabit, newHabit);
+            habitRepository.changeHabit(user, oldHabit, newHabit);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return false;
@@ -91,9 +92,25 @@ public class HabitService {
         return true;
     }
 
-    public boolean deleteHabit(String email, Habit habit) {
+    public boolean checkHabit(User user, Habit habit) {
         try {
-            habitRepository.deleteHabit(email, habit);
+            if (habit.isCompleted()) {
+                return true;
+            }
+
+            Habit newHabit = new Habit(habit.getName(), habit.getDescription(), habit.getFrequency(), habit.getCreated(), true, habit.getHistoryChecks());
+            habitRepository.changeHabit(user, habit, newHabit);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+            return false;
+        }
+
+        return true;
+    }
+
+    public boolean deleteHabit(Habit habit) {
+        try {
+            habitRepository.deleteHabit(habit);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return false;

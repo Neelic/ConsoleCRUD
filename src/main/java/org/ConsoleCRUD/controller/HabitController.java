@@ -28,21 +28,21 @@ public class HabitController {
         String description = screen.getDescription();
         Frequency frequency = screen.getFrequency();
 
-        if (habitService.createHabit(user.getEmail(), name, description, frequency)) {
+        if (habitService.createHabit(user, name, description, frequency)) {
             showHabits(user);
         }
     }
 
     public void showHabit(User user, int habitNumber) {
         int choice = screenContainer.getScreen(ScreenContainer.HABIT_SCREEN).show();
-        Habit habit = habitService.getHabits(user.getEmail()).get(habitNumber - 1);
+        Habit habit = habitService.getHabits(user).get(habitNumber - 1);
 
         switch (choice) {
             case HabitScreen.EXIT_CHOICE -> showHabits(user);
             case HabitScreen.CHANGE_HABIT_CHOICE -> changeHabit(user, habit);
             case HabitScreen.DELETE_HABIT_CHOICE -> deleteHabit(user, habit);
             case HabitScreen.CHANGE_MARK_CHOICE -> {
-                habit.setCompleted(true);
+                habitService.checkHabit(user, habit);
                 showHabits(user);
             }
         }
@@ -50,7 +50,7 @@ public class HabitController {
 
     public void showHabits(User user) {
         HabitsShowScreen screen = (HabitsShowScreen) screenContainer.getScreen(ScreenContainer.HABITS_SHOW_SCREEN);
-        screen.setHabits(habitService.getHabits(user.getEmail()));
+        screen.setHabits(habitService.getHabits(user));
         int choice = screen.show();
 
         if (choice != HabitsShowScreen.EXIT_CHOICE) {
@@ -65,7 +65,7 @@ public class HabitController {
         String description = screen.getDescription();
         Frequency frequency = screen.getFrequency();
 
-        if (habitService.changeHabit(user.getEmail(), oldHabit, name, description, frequency)) {
+        if (habitService.changeHabit(user, oldHabit, name, description, frequency)) {
             screen.printEditMessage();
         }
 
@@ -73,7 +73,7 @@ public class HabitController {
     }
 
     public void deleteHabit(User user, Habit habit) {
-        if (habitService.deleteHabit(user.getEmail(), habit)) {
+        if (habitService.deleteHabit(habit)) {
             screenContainer.getScreen(ScreenContainer.HABIT_DELETE_SCREEN).show();
         }
 
@@ -82,7 +82,7 @@ public class HabitController {
 
     public void showHabitsStat(User user) {
         HabitsStatScreen screen = (HabitsStatScreen) screenContainer.getScreen(ScreenContainer.HABITS_STAT_SCREEN);
-        screen.setHabits(habitService.getHabits(user.getEmail()));
+        screen.setHabits(habitService.getHabits(user));
         screen.show();
     }
 }

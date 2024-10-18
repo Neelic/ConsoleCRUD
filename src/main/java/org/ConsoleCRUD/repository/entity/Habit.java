@@ -6,17 +6,13 @@ import java.util.List;
 
 public class Habit {
 
-    private static int globalId = 0;
-
-    private final int id;
     private final String name;
     private final String description;
     private final Frequency frequency;
     private final List<LocalDate> historyChecks = new ArrayList<>();
-
+    private int id; //unique
     private boolean completed = false;
     private LocalDate created = LocalDate.now();
-
     public Habit(String name, String description, Frequency frequency) {
 
         if (name == null || description == null || frequency == null) {
@@ -30,7 +26,7 @@ public class Habit {
         this.name = name;
         this.description = description;
         this.frequency = frequency;
-        this.id = ++globalId;
+        this.id = 0;
     }
 
     public Habit(String name, String description, Frequency frequency, LocalDate created, boolean completed, List<LocalDate> historyChecks) {
@@ -46,7 +42,7 @@ public class Habit {
         this.name = name;
         this.description = description;
         this.frequency = frequency;
-        this.id = ++globalId;
+        this.id = 0;
         this.created = created;
         this.completed = completed;
         this.historyChecks.addAll(historyChecks);
@@ -68,6 +64,10 @@ public class Habit {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public boolean isCompleted() {
         return completed;
     }
@@ -86,5 +86,13 @@ public class Habit {
 
     public List<LocalDate> getHistoryChecks() {
         return historyChecks;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Habit habit = (Habit) o;
+        return id == habit.id;
     }
 }

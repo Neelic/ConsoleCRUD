@@ -48,7 +48,7 @@ public class UserService {
 
     public boolean updateUser(String email, String password, String name) {
         try {
-            User user = new User(email, password, name);
+            User user = new User(email, password, name, currentUser.getId());
             userRepository.updateUser(user);
 
             currentUser = user;
@@ -66,7 +66,7 @@ public class UserService {
                 throw new IllegalArgumentException("User is not logged in");
             }
 
-            userRepository.deleteUser(currentUser.getEmail());
+            userRepository.deleteUser(currentUser);
         } catch (IllegalArgumentException e) {
             System.out.println(e.getMessage());
             return false;

@@ -11,9 +11,13 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
+/**
+ * This class is used to connect to the database
+ */
 public class Storage {
 
     private static Storage INSTANCE;
+    private static StorageConf conf;
     private final String jdbcUrl;
     private final String username;
     private final String password;
@@ -21,7 +25,10 @@ public class Storage {
 
     protected Storage() {
 
-        StorageConf conf = StorageConf.loadConfig();
+        if (conf == null) {
+            conf = StorageConf.loadConfig();
+        }
+
         jdbcUrl = conf.getJdbcUrl();
         username = conf.getUsername();
         password = conf.getPassword();
@@ -34,11 +41,31 @@ public class Storage {
         }
     }
 
+    public static void setConf(StorageConf conf) {
+        Storage.conf = conf;
+    }
+
     public static Storage getInstance() {
         if (INSTANCE == null) {
             INSTANCE = new Storage();
         }
         return INSTANCE;
+    }
+
+    public String getJdbcUrl() {
+        return jdbcUrl;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getSchemaName() {
+        return schemaName;
     }
 
     public Connection getConnection() throws SQLException {
