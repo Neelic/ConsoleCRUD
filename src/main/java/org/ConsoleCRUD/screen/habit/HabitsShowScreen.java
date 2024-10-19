@@ -25,6 +25,10 @@ public class HabitsShowScreen implements Screen {
     public int show() {
         System.out.println(FIRST_MESSAGE);
 
+        if (habits == null) {
+            return EXIT_CHOICE;
+        }
+
         for (int i = 0; i < habits.size(); i++) {
             Habit habit = habits.get(i);
             System.out.printf(

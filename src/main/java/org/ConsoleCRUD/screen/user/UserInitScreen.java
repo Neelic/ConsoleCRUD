@@ -24,6 +24,7 @@ public class UserInitScreen implements Screen {
         this.scanner = scanner;
     }
 
+    @Override
     public int show() {
         System.out.println(FIRST_SCREEN_MESSAGE);
         return ScreenUtils.getUserChoice(scanner, this::isNotCorrectChoice);
