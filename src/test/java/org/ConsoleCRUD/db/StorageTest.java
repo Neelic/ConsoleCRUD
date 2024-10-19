@@ -17,7 +17,7 @@ import static org.junit.Assert.*;
 
 public class StorageTest {
 
-    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>("postgres:14.8-alpine3.18")
+    public static PostgreSQLContainer<?> postgreSQLContainer = new PostgreSQLContainer<>(DB_IMAGE)
             .withReuse(true)
             .withDatabaseName(DB_NAME)
             .withExposedPorts(DB_PORT)
