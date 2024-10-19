@@ -48,6 +48,10 @@ public class UserService {
 
     public boolean updateUser(String email, String password, String name) {
         try {
+            if (currentUser == null) {
+                throw new IllegalArgumentException("User is not logged in");
+            }
+
             User user = new User(email, password, name, currentUser.getId());
             userRepository.updateUser(user);
 
