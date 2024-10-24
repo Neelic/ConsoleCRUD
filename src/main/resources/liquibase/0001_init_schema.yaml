@@ -1,0 +1,9 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: "Dan"
+      changes:
+        - sql:
+            dbms: "postgresql"
+            endDelimiter: ";"
+            sql: CREATE SCHEMA IF NOT EXISTS protected

@@ -1,0 +1,100 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: "Dan"
+      changes:
+        - insert:
+            tableName: "users"
+            schemaName: protected
+            columns:
+              - column:
+                  name: email
+                  value: "bI4oT@example.com"
+              - column:
+                  name: password
+                  value: "12345"
+              - column:
+                  name: name
+                  value: "Igor"
+        - insert:
+            tableName: "users"
+            schemaName: protected
+            columns:
+              - column:
+                  name: email
+                  value: "3@example.com"
+              - column:
+                  name: password
+                  value: "12345"
+              - column:
+                  name: name
+                  value: "Sam"
+        - insert:
+            tableName: "frequencies"
+            schemaName: protected
+            columns:
+              - column:
+                  name: name
+                  value: "DAILY"
+        - insert:
+            tableName: "frequencies"
+            schemaName: protected
+            columns:
+              - column:
+                  name: name
+                  value: "WEEKLY"
+        - insert:
+            tableName: "frequencies"
+            schemaName: protected
+            columns:
+              - column:
+                  name: name
+                  value: "MONTHLY"
+        - insert:
+            tableName: "habits"
+            schemaName: protected
+            columns:
+              - column:
+                  name: name
+                  value: "Running"
+              - column:
+                  name: description
+                  value: "Run for 30 minutes"
+              - column:
+                  name: frequency_id
+                  value: "1"
+              - column:
+                  name: user_id
+                  value: "1"
+        - insert:
+            tableName: "habits"
+            schemaName: protected
+            columns:
+              - column:
+                  name: name
+                  value: "Cycling"
+              - column:
+                  name: description
+                  value: "Cycling for 30 minutes"
+              - column:
+                  name: frequency_id
+                  value: "2"
+              - column:
+                  name: user_id
+                  value: "1"
+        - insert:
+            tableName: "habits"
+            schemaName: protected
+            columns:
+              - column:
+                  name: name
+                  value: "Push-ups"
+              - column:
+                  name: description
+                  value: "Push-ups for 30 minutes"
+              - column:
+                  name: frequency_id
+                  value: "3"
+              - column:
+                  name: user_id
+                  value: "2"
